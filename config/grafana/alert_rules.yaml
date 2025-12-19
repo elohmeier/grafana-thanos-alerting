@@ -1,0 +1,49 @@
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: "Demo Group"
+    folder: "Provisioned Alerts"
+    interval: 10s
+    rules:
+      - uid: "demo_alert_001"
+        title: "High Memory Usage Demo"
+        condition: "B"
+        data:
+          - refId: "A"
+            datasourceUid: "thanos"
+            relativeTimeRange:
+              from: 600
+              to: 0
+            model:
+              refId: "A"
+              expr: "mem_used_percent"
+              intervalMs: 1000
+              maxDataPoints: 43200
+          - refId: "B"
+            datasourceUid: "__expr__"
+            relativeTimeRange:
+              from: 600
+              to: 0
+            model:
+              refId: "B"
+              type: "classic_conditions"
+              expression: "A"
+              conditions:
+                - evaluator:
+                    params: [0]
+                    type: "gt"
+                  operator:
+                    type: "and"
+                  query:
+                    params: ["A"]
+                  reducer:
+                    type: "last"
+        for: "10s"
+        labels:
+          severity: "warning"
+        annotations:
+          summary: "Memory usage is above 0%"
+          description: "This is a demo alert provisioned via configuration."
+          __dashboardUid__: "system-metrics-001"
+          __panelId__: "2"
