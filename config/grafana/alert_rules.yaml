@@ -6,7 +6,7 @@ groups:
     folder: "Provisioned Alerts"
     interval: 10s
     rules:
-      - uid: "demo_alert_001"
+      - uid: HighMemoryUsageGrafana
         title: "High Memory Usage Demo"
         condition: "B"
         data:

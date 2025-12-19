@@ -1,0 +1,11 @@
+groups:
+  - name: cpu.usage
+    rules:
+      - alert: HighCpuUsageThanos
+        expr: cpu_usage_user{cpu="cpu-total"} > 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "CPU usage above 0%"
+          description: "Average user CPU usage on {{ $labels.host }} is {{ $value | printf \"%.1f\" }}%."

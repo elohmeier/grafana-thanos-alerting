@@ -26,10 +26,34 @@ services:
       - --grpc-address=0.0.0.0:10901
       - --http-address=0.0.0.0:9090
       - --endpoint=dns+thanos-receive:10901
+      - --endpoint=dns+thanos-ruler:10911
     ports:
       - "9090:9090"
     depends_on:
       - thanos-receive
+
+  thanos-ruler:
+    image: quay.io/thanos/thanos:v0.40.1
+    user: root
+    command:
+      - rule
+      - --grpc-address=0.0.0.0:10911
+      - --http-address=0.0.0.0:10912
+      - --eval-interval=10s
+      - --query=thanos-query:9090
+      - --alertmanagers.url=http://alertmanager:9093
+      - --data-dir=/var/thanos/ruler
+      - --rule-file=/etc/thanos/rules/*.yaml
+      - --label=ruler_cluster="demo"
+      - --label=ruler_replica="0"
+    ports:
+      - "10912:10912"
+    volumes:
+      - ./config/thanos/rules:/etc/thanos/rules:ro
+      - thanos-ruler-data:/var/thanos/ruler
+    depends_on:
+      - thanos-query
+      - alertmanager
 
   alertmanager:
     image: quay.io/prometheus/alertmanager:v0.30.0
@@ -108,3 +132,4 @@ services:
 volumes:
   thanos-data:
   mailpit-data:
+  thanos-ruler-data:

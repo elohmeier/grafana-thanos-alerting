@@ -4,6 +4,7 @@ This setup demonstrates a complete observability and alerting pipeline using:
 - **Telegraf**: Collects system metrics (CPU, Mem) and pushes them via Prometheus Remote Write to Thanos.
 - **Thanos Receive**: Ingests metrics from Telegraf.
 - **Thanos Query**: Queries data from Receive.
+- **Thanos Ruler**: Evaluates Prometheus-style recording/alerting rules against Thanos Query and forwards alerts to Alertmanager.
 - **Grafana**: Visualizes metrics, manages alerts (Unified Alerting), and renders panel screenshots.
 - **Alertmanager**: Receives alerts from Grafana and manages notifications.
 - **Mailpit**: Captures and displays email notifications (SMTP) from Alertmanager.
@@ -24,6 +25,7 @@ This setup demonstrates a complete observability and alerting pipeline using:
    - **Mailpit**: [http://localhost:8025](http://localhost:8025)
      - View captured alert emails. Emails should contain an embedded screenshot of the Grafana panel.
    - **Thanos Query**: [http://localhost:9090](http://localhost:9090)
+   - **Thanos Ruler**: [http://localhost:10912](http://localhost:10912)
    - **Alertmanager**: [http://localhost:9093](http://localhost:9093)
 
 ## Features Demonstrated
@@ -44,5 +46,7 @@ This setup demonstrates a complete observability and alerting pipeline using:
     - `config/grafana/datasources.yaml`: Connects to Thanos and Alertmanager.
     - `config/grafana/alert_rules.yaml`: Defines the alert rules.
     - `config/grafana/dashboards.yaml` & `config/grafana/dashboards/`: Dashboard provisioning.
+- **Thanos Ruler**:
+    - `config/thanos/rules/cpu_alerts.yaml`: Example CPU usage alert evaluated by Thanos Ruler and sent to Alertmanager.
 - **Alertmanager**: `config/alertmanager.yaml` defines receivers and routing (email).
 - **Telegraf**: `config/telegraf.conf` defines input plugins and remote write output.
